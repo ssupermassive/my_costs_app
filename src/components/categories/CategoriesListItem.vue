@@ -202,12 +202,16 @@ export default {
   position: relative;
 
   &:hover {
-    background-color: #c2dde6;
+    background-color: #AAA;
     cursor: pointer;
+
+    & .me-CategoriesListItem-text {
+      color: black;
+    }
   }
 
   &__editMode {
-    background-color: #eaeaea;
+    background-color: var(--gray);
   }
 
   &-icon {
@@ -221,6 +225,7 @@ export default {
   }
 
   &-text {
+    color: var(--white);
     margin-left: calc(0.75rem + 1px);
   }
 

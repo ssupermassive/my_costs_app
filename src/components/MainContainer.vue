@@ -6,20 +6,21 @@
         <b-icon
           title="Новый расход"
           v-b-modal.add-costs-modal
-          class="me-MainContainer-header-button h2"
+          class="me-MainContainer-header-button"
           icon="plus-circle-fill"
         />
         <b-icon
           title="Настройки"
           v-b-toggle.sidebar
-          class="me-MainContainer-header-button h2"
+          class="me-MainContainer-header-button"
           icon="gear-fill"
         />
       </div>
-      <b-sidebar id="sidebar" title="Категории" right shadow backdrop>
+      <b-sidebar id="sidebar" bg-variant="dark" text-variant="light" title="Категории" right shadow backdrop>
         <template #title>
           <div class="me-CategoriesSitebar__title align-items-center">
             <b-icon
+              variant="light"
               class="me-CategoriesSitebar__add"
               icon="plus-circle"
               title="+ Категория"
@@ -69,16 +70,21 @@ export default {
   &-content {
     height: 100%;
     width: 100%;
+    background-color: var(--dark);
   }
 
   &-header {
-    margin-top: 12px;
+    height: 60px;
+    background-color: var(--gray);
+    color: var(--light);
     &-title {
       margin-left: 24px;
       margin-bottom: 0;
     }
 
     &-button {
+      cursor: pointer;
+      font-size: 2rem;
       margin-right: 24px;
     }
   }
@@ -86,6 +92,7 @@ export default {
 
 .me-CategoriesSitebar {
   &__title {
+    color: var(--light);
     display: flex;
   }
 
@@ -93,13 +100,6 @@ export default {
     font-size: 2rem;
     margin-right: 12px;
     cursor: pointer;
-  }
-}
-
-.mc-MainContainer {
-  &-header {
-    &-buttons {
-    }
   }
 }
 </style>
