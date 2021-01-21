@@ -1,0 +1,132 @@
+<template>
+  <b-modal :id="$attrs.id" :hide-footer="true" title="Новый расход">
+    <b-form @submit="submitHandler">
+      <b-form-datepicker
+        class="mc-CostsDialog__input"
+        v-model="itemData.date"
+        size="lg"
+      ></b-form-datepicker>
+      <b-form-select
+        required
+        class="mc-CostsDialog__input"
+        v-model="itemData.category"
+        size="lg"
+        :options="$store.state.categories.items"
+        value-field="id"
+        text-field="name"
+      >
+        <template #first>
+          <b-form-select-option :value="null" disabled
+            >Укажите категорию</b-form-select-option
+          >
+        </template>
+      </b-form-select>
+      <b-form-input
+        class="mc-CostsDialog__input"
+        required
+        size="lg"
+        v-model="itemData.sum"
+        type="number"
+        min="1"
+        :number="true"
+        placeholder="Укажите сумму"
+        :formatter="sumFormatter"
+      ></b-form-input>
+      <b-form-input
+        class="mc-CostsDialog__input"
+        v-model="itemData.comment"
+        size="lg"
+        autocomplete="off"
+        placeholder="Комментарий"
+      ></b-form-input>
+      <b-button class="mc-CostsDialog__submit" type="submit" variant="primary"
+        >Добавить
+      </b-button>
+    </b-form>
+  </b-modal>
+</template>
+
+<script>
+const MAX_SUM_FRACTION_COUNT = 2;
+
+export default {
+  name: "costs-dialog",
+  props: {
+    item: {
+      type: Object,
+      default: () => ({
+        id: null,
+        category: null,
+        date: new Date(),
+        comment: null,
+        sum: null,
+      }),
+    },
+  },
+  data() {
+    return {
+      itemData: { ...this.item }
+    };
+  },
+  methods: {
+    /**
+     * Функция для форматирования вводимого в поле суммы числа
+     * ToDo: регулярка?
+     */
+    sumFormatter(value) {
+      const [first] = value;
+      let result = value;
+
+      // Если первый символ - ноль или мунус, то отбрасываем его
+      if (parseInt(first) === 0 || first === "-") {
+        result = result.substr(1);
+      }
+
+      // разделяем целую и дробную часть
+      // если в дробной части становится больше 2 цифр,
+      // оставляем только 2, остальное отбрасываем
+      const [num, fraction] = value.split(".");
+
+      if (fraction && fraction > MAX_SUM_FRACTION_COUNT) {
+        result = `${num}.${fraction.substr(0, MAX_SUM_FRACTION_COUNT)}`;
+      }
+
+      return result;
+    },
+
+    /**
+     * Обработка завершения редактирования
+     */
+    submitHandler(event) {
+      event.preventDefault();
+      this.$store.dispatch("createCost", this.itemData).then(() => {
+          this.itemData = this.$getDefaultItemData();
+          this.$bvModal.hide(this.$attrs.id);
+      });
+    },
+    $getDefaultItemData() {
+      return {
+        id: null,
+        category: null,
+        date: new Date(),
+        comment: null,
+        sum: null,
+      };
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.mc-CostsDialog {
+  &__input {
+    text-align: center;
+    text-align-last: center; // для select
+    margin-top: 1rem;
+  }
+
+  &__submit {
+    margin-top: 1rem;
+  }
+}
+</style>
