@@ -1,5 +1,9 @@
 <template>
-  <b-modal :id="$attrs.id" :hide-footer="true" title="Новый расход">
+  <b-modal body-bg-variant="dark" 
+           header-text-variant="light"
+           header-bg-variant="secondary"
+           header-border-variant="secondary"
+           :id="$attrs.id" :hide-footer="true" title="Новый расход">
     <b-form @submit="submitHandler">
       <b-form-datepicker
         class="mc-CostsDialog__input"
@@ -117,7 +121,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .mc-CostsDialog {
   &__input {
     text-align: center;

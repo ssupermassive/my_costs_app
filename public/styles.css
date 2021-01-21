@@ -17,3 +17,9 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
+
+svg:focus,
+path:focus {
+    outline: none;
+    border: 0;
+}

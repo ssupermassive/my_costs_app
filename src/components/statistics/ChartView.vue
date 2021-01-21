@@ -18,10 +18,11 @@ export default {
           text: this.$store.state.costs.total.toLocaleString(),
           align: 'center',
           verticalAlign: 'middle',
-          y: 30,
-          style: {fontSize: '2rem', fontWeight: 'bold'}
+          y: 50,
+          style: {fontSize: '3rem', fontWeight: 'bold', color: 'white'}
         },
         chart: {
+          backgroundColor: '#343a40',
           plotBackgroundColor: null,
           plotBorderWidth: null,
           plotShadow: false,
@@ -42,9 +43,9 @@ export default {
         },
         series: [
           {
-            name: "Всего",
+            name: "Расход",
             colorByPoint: true,
-            innerSize: "80%",
+            innerSize: "75%",
             data,
           },
         ],

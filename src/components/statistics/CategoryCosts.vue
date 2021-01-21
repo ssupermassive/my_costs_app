@@ -22,13 +22,16 @@ export default {
 <style lang="scss" scoped>
 .mc-CategoryCosts {
     &__icon {
-        font-size: 4rem
+        font-size: 5rem
     }
     &__part {
       padding: 4px 0;
       font-weight: bold;
       text-align: center;
       min-height: 24px;
+      height: 24px;
+      color: var(--light);
+      font-size: 1.5rem;
     }
 }
 </style>
