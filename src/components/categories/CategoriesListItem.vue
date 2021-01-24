@@ -1,6 +1,8 @@
 <template>
   <b-form
-    :id="validationPopoverTarget"
+    :id="formId"
+    @mouseover="mouseoverHandler($event)"
+    @mouseout="mouseoutHandler($event)"
     class="me-CategoriesListItem me-CategoriesListItem align-items-center"
     :class="{
       'me-CategoriesListItem__editMode': editMode,
@@ -10,7 +12,7 @@
   >
     <b-icon
       class="me-CategoriesListItem-icon flex-grow-0 flex-shrink-0 h2"
-      :style="{color: iconColor}"
+      :style="{ color: iconColor }"
       :id="iconPopoverTarget"
       :title="iconTitle"
       :icon="icon"
@@ -29,23 +31,34 @@
       {{ itemData.name }}
     </div>
     <div
-      v-if="editMode"
+      v-if="editMode || showActionsButtons"
       class="me-CategoriesListItem__editingButtons justify-content-end align-items-center"
     >
       <b-icon
+        v-if="editMode"
         @click.stop
         @click="editComplete()"
         title="Сохранить"
         variant="success"
-        class="me-CategoriesListItem__editingButtons-ok"
+        class="me-CategoriesListItem__editingButtons-button"
         icon="check-circle-fill"
       />
       <b-icon
+        v-if="itemData.id"
+        @click.stop
+        @click="deleteItem()"
+        title="Удалить"
+        variant="danger"
+        class="me-CategoriesListItem__editingButtons-button"
+        icon="x-circle"
+      />
+      <b-icon
+        v-if="editMode"
         @click.stop
         @click="cancelEdit()"
         title="Отмена"
-        class="me-CategoriesListItem__editingButtons-cancel"
-        icon="x-circle"
+        class="me-CategoriesListItem__editingButtons-button"
+        icon="x"
       />
     </div>
     <b-popover
@@ -63,11 +76,15 @@
         </span>
         Выберите иконку
       </template>
-      <category-icons-list @itemClick="iconChanged"/>
+      <category-icons-list @itemClick="iconChanged" />
     </b-popover>
-    <b-popover :target="validationPopoverTarget" placement="top" :delay="{show: 50, hide: 50}"
-    :show.sync="validationState.popoverShow"
-    :disabled.sync="validationState.popoverDisabled" >
+    <b-popover
+      :target="formId"
+      placement="top"
+      :delay="{ show: 50, hide: 50 }"
+      :show.sync="validationState.popoverShow"
+      :disabled.sync="validationState.popoverDisabled"
+    >
       <div>{{ validationState.message }}</div>
     </b-popover>
   </b-form>
@@ -105,13 +122,14 @@ export default {
   data: function () {
     return {
       showPopover: false,
-      itemData: {},
+      itemData: {...this.item},
+      showActionsButtons: false,
       validationState: {
         inputValid: null,
         popoverShow: false,
         popoverDisabled: true,
-        message: ''
-      }
+        message: "",
+      },
     };
   },
   computed: {
@@ -130,8 +148,8 @@ export default {
     iconColor() {
       return this.itemData.icon ? this.itemData.icon.color : "#CCC";
     },
-    validationPopoverTarget() {
-      return `validation-popever-target-${this.item.id}`;
+    formId() {
+      return `form-${this.item.id}`;
     },
   },
   methods: {
@@ -150,9 +168,6 @@ export default {
       this.itemData.icon = icon;
       this.togglePopover();
     },
-    updateItemData(itemData) {
-      this.itemData = itemData;
-    },
     validate() {
       const { name, icon } = this.itemData;
       const hasText = !!name.trim();
@@ -164,10 +179,10 @@ export default {
       }
 
       this.updateValidationState({
-          inputValid: hasText ? null : false,
-          popoverDisabled: false,
-          popoverShow: true,
-          message: hasText ? 'Выберите иконку' : 'Укажите название'
+        inputValid: hasText ? null : false,
+        popoverDisabled: false,
+        popoverShow: true,
+        message: hasText ? "Выберите иконку" : "Укажите название",
       });
 
       return false;
@@ -177,19 +192,32 @@ export default {
     },
     resetValidationState() {
       this.updateValidationState({
-          inputValid: null,
-          popoverDisabled: true,
-          popoverShow: false,
-          message: ''
-        });
+        inputValid: null,
+        popoverDisabled: true,
+        popoverShow: false,
+        message: "",
+      });
+    },
+    deleteItem() {
+      this.$emit('deleteItem', this.itemData.id);
+    },
+    mouseoverHandler() {
+      this.showActionsButtons = true;
+    },
+    mouseoutHandler(event) {
+
+        if (!event.relatedTarget) {
+          this.showActionsButtons = false;
+          return;
+        }
+
+        const closes = event.relatedTarget.closest('.me-CategoriesListItem');
+        this.showActionsButtons = closes && closes.attributes['id'].value === this.formId;
     }
-  },
-  created: function () {
-    this.updateItemData({ ...this.item });
   },
   watch: {
     item(newValue) {
-      this.updateItemData({ ...newValue });
+      this.itemData = {...newValue};
     },
   },
 };
@@ -202,7 +230,7 @@ export default {
   position: relative;
 
   &:hover {
-    background-color: #AAA;
+    background-color: #aaa;
     cursor: pointer;
 
     & .me-CategoriesListItem-text {
@@ -230,7 +258,7 @@ export default {
   }
 
   &__editingButtons {
-    padding: 4px 0;
+    padding: 4px 8px 4px 0;
     position: absolute;
     bottom: -32px;
     right: 0;
@@ -240,12 +268,8 @@ export default {
     border-radius: 0 0 0 24px;
     background: inherit;
 
-    &-ok {
-      margin: 0 12px;
-    }
-
-    &-cancel {
-      margin-right: 12px;
+    &-button {
+      margin-left: 12px;
     }
   }
 

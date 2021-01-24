@@ -15,21 +15,28 @@ export default {
         }
     },
     actions: {
-        create(store, item) {
+        async createCategory(store, item) {
             const newItem = {...item};
             newItem.id = Date.now();
             const items = [...store.state.items, newItem];
-            return store.dispatch('saveCategoriesInStore', items);
+            await store.dispatch('saveCategoriesInStore', items);
+            await store.dispatch('recalculateCostsByCategory', store.state.items)
         },
-        update(store, item) {
+        updateCategory(store, item) {
             const items = store.state.items.map((current) => {
                 return current.id === item.id ? {...item} : {...current}
             });
             return store.dispatch('saveCategoriesInStore', items);
         },
-        delete(store, id) {
+        async deleteCategory(store, id) {
             const items = store.state.items.filter((item) => item.id !== id);
-            return store.dispatch('saveCategoriesInStore', items);
+
+            await Promise.all(
+                [
+                store.dispatch('saveCategoriesInStore', items),
+                store.dispatch('deleteCostsByCategory', id)
+                ]
+            )
         },
         saveCategoriesInStore(store, items) {
             localStorage.setItem(DATA_TOKEN, JSON.stringify(items));

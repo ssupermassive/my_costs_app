@@ -15,6 +15,7 @@
       :editMode="editingItem === item"
       @editComplete="$editCompleteHandler"
       @cancelEdit="$cancelEdit"
+      @deleteItem="$deleteItem"
       @itemClick="$itemClickHandler(item)"
     />
   </div>
@@ -45,16 +46,19 @@ export default {
       this.isAdd = false;
       this.editingItem = null;
     },
+    $deleteItem(id) {
+      this.$store.dispatch('deleteCategory', id);
+    },
     $editCompleteHandler(item) {
       if (this.checkValidation(item)) {
-        this.$store.dispatch("update", item).then(() => {
+        this.$store.dispatch("updateCategory", item).then(() => {
           this.$cancelEdit();
         });
       }
     },
     $createCompleteHandler(item) {
       if (this.checkValidation(item)) {
-        this.$store.dispatch("create", item).then(() => {
+        this.$store.dispatch("createCategory", item).then(() => {
           this.$cancelEdit();
         });
       }
