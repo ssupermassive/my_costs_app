@@ -1,4 +1,9 @@
-import {DATA_TOKEN, DEFAULT_CATEGORIES, CATEGORIES_ICONS} from '../data/categories';
+import {
+    DATA_TOKEN, 
+    DEFAULT_CATEGORIES, 
+    CATEGORIES_ICONS,
+    DEMO_CATEGORIES
+} from '../data/categories';
 
 export default {
     state: () => ({
@@ -54,6 +59,9 @@ export default {
                 }
             );
             return Promise.resolve();
+        },
+        async applyDemoCategories(store) {
+            store.dispatch('saveCategoriesInStore', DEMO_CATEGORIES);
         }
     }
 }

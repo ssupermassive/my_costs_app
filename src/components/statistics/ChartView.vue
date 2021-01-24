@@ -3,11 +3,8 @@
 </template>
 
 <script>
-import { Chart } from "highcharts-vue";
-
 export default {
   name: "chart-view",
-  components: [Chart],
   computed: {
     chartOptions() {
       const { data, colors } = this.$store.state.costs.statistics;
@@ -18,8 +15,8 @@ export default {
           text: this.$store.state.costs.total.toLocaleString(),
           align: 'center',
           verticalAlign: 'middle',
-          y: 50,
-          style: {fontSize: '3rem', fontWeight: 'bold', color: 'white'}
+          y: 30,
+          style: {fontSize: '2rem', fontWeight: 'bold', color: 'white'}
         },
         chart: {
           backgroundColor: '#343a40',

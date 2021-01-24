@@ -1,4 +1,4 @@
-import {DATA_TOKEN, DEFAULT_COSTS} from '../data/costs';
+import {DATA_TOKEN, DEFAULT_COSTS, DEMO_COSTS} from '../data/costs';
 
 export default {
     state: () => ({
@@ -164,6 +164,15 @@ export default {
                     total
                 }
             );
-        } 
+        },
+        async applyDemoCosts(store) {
+            await Promise.all(
+                [
+                    store.dispatch('saveCostsInStore', DEMO_COSTS),
+                    store.dispatch('recalculateCostsByCategory', DEMO_COSTS)
+                ]
+            );
+            await store.dispatch('recalculateStatisticsData', store.state.itemsByCategory);
+        }
     }
 };
