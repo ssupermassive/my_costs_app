@@ -132,6 +132,19 @@ export default {
             localStorage.setItem(DATA_TOKEN, JSON.stringify(items));
             store.commit('updateCostsItems', items);
         },
+        async deleteCostsByCategory(store, categoryKey) {
+            const items = store.state.items.filter((item) => {
+                return item.category !== categoryKey
+            });
+
+            await Promise.all(
+                [
+                    store.dispatch('saveCostsInStore', items),
+                    store.dispatch('recalculateCostsByCategory', items)
+                ]
+            );
+            await store.dispatch('recalculateStatisticsData', store.state.itemsByCategory);
+        },
         async initCostsData(store) {
             const savedData = localStorage.getItem(DATA_TOKEN);
             const items = savedData ? JSON.parse(savedData) : DEFAULT_COSTS;
