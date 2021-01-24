@@ -1,16 +1,16 @@
 <template>
-  <div id="app">
-    <main-container/>
+  <div id="app" class="flexbox justify-content-center">
+    <app-layout/>
   </div>
 </template>
 
 <script>
-import MainContainer from './components/MainContainer.vue'
+import AppLayout from './components/app/AppLayout.vue'
 
 export default {
   name: 'App',
   components: {
-    MainContainer
+    AppLayout
   }
 }
 </script>
