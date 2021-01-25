@@ -89,6 +89,7 @@ export default {
   width: 100%;
   height: 100%;
   max-width: 1024px;
+  box-shadow: 0px 4px 5px 3px rgba(0, 0, 0, 0.2);
 
   &-content {
     height: 100%;
@@ -97,6 +98,7 @@ export default {
   }
 
   &-header {
+    position: relative;
     height: 60px;
     width: 100%;
     background-color: var(--gray);
@@ -113,6 +115,15 @@ export default {
       &-round {
         font-size: 2rem;
       }
+    }
+
+    &:after {
+      content: " ";
+    height: 8px;
+    width: 100%;
+    position: absolute;
+    background: linear-gradient(180deg,rgba(0,0,0,.3), transparent);
+    bottom: -8px;
     }
   }
 
