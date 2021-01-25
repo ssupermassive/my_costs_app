@@ -7,7 +7,8 @@
         <div
           v-for="item in topData"
           :key="item.id"
-          class="mc-ChartLayout__category flexbox justify-content-center"
+          class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
+          :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
         >
           <category-costs :item="item" />
         </div>
@@ -21,7 +22,8 @@
           <div
             v-for="item in leftData"
             :key="item.id"
-            class="mc-ChartLayout__category"
+            class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
+            :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
           >
             <category-costs :item="item" />
           </div>
@@ -29,7 +31,7 @@
       </div>
       <div
         class="mc-ChartLayout__center-middle flex-grow-1 flex-shrink-1">
-          <chart-view/>
+          <chart-view @pointMouseOut="pointMouseOutHandler" @pointMouseOver="pointMouseOverHandler"/>
         </div>
       <div
         class="mc-ChartLayout__center-right justify-content-around align-items-center flexbox flex-column flex-grow-0 flex-shrink-0"
@@ -38,7 +40,8 @@
           <div
             v-for="item in rightData"
             :key="item.id"
-            class="mc-ChartLayout__category"
+            class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
+            :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
           >
             <category-costs :item="item" />
           </div>
@@ -52,9 +55,10 @@
         <div
           v-for="item in bottomData"
           :key="item.id"
-          class="mc-ChartLayout__category flexbox justify-content-center"
+          class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
+          :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
         >
-          <category-costs :item="item" />
+          <category-costs :item="item"/>
         </div>
       </template>
     </div>
@@ -75,6 +79,11 @@ export default {
   components: {
     CategoryCosts,
     ChartView
+  },
+  data() {
+    return {
+      selectedCategory: null
+    }
   },
   computed: {
     topData() {
@@ -106,6 +115,12 @@ export default {
       }
       return null;
     },
+    pointMouseOverHandler(id) {
+      this.selectedCategory = id;
+    },
+    pointMouseOutHandler() {
+      this.selectedCategory = null;
+    }
   },
 };
 </script>
@@ -129,6 +144,16 @@ export default {
   &__top,
   &__bottom {
     padding: 2rem 0;
+  }
+
+  &__category {
+    width: 8rem;
+    height: 8rem;
+
+    &-selected {
+      background-color: rgba($color: #CCC, $alpha: 0.5);
+      border-radius: 50%;
+    }
   }
 }
 </style>

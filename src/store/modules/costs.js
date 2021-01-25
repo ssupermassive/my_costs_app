@@ -105,9 +105,11 @@ export default {
                     }
                     return false;
                 }).map((item) => {
-                    return [
-                        item.name, item.total
-                    ]
+                    return { 
+                        id: item.id,
+                        name: item.name, 
+                        y: item.total
+                    }
                 });
     
                 return Promise.resolve({
@@ -152,7 +154,7 @@ export default {
             const [ statistics, detailing ] = await Promise.all([
                 store.dispatch('getStatisticsData', itemsByCategory),
                 store.dispatch('recalculateDetailingData', itemsByCategory),
-            ])
+            ]);
 
             this.commit(
                 'updateCostsState',
