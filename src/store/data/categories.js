@@ -10,7 +10,7 @@ export const CATEGORIES_ICONS = [
     {id: 9, value: 'gift', color: '#8A2BE2'},
     {id: 10, value: 'globe2', color: '#483D8B'},
     {id: 11, value: 'heart', color: '#FF0000'},
-    {id: 12, value: 'scissors', color: '#808080'},
+    {id: 12, value: 'scissors', color: '#468d98'},
     {id: 13, value: 'tools', color: '#2F4F4F'},
     {id: 14, value: 'telephone', color: '#F08080'},
     {id: 15, value: 'music-note-list', color: '#FFA500'},
@@ -31,7 +31,7 @@ export const DEFAULT_CATEGORIES = [
     {id: 4, name: 'Интернет', icon: {id: 10, value: 'globe2', color: '#483D8B'}},
     {id: 5, name: 'Кофебрэйк', icon: {id: 8, value: 'cup', color: '#00FFFF'}},
     {id: 6, name: 'Телевидение', icon: {id: 18, value: 'tv', color: '#7B68EE'}},
-    {id: 7, name: 'Стиль', icon: {id: 12, value: 'scissors', color: '#808080'}},
+    {id: 7, name: 'Стиль', icon: {id: 12, value: 'scissors', color: '#468d98'}},
     {id: 8, name: 'Игры', icon: {id: 7, value: 'controller', color: '#FFFF00'}},
     {id: 9, name: 'Бытовые расходы', icon: {id: 5, value: 'box-seam', color: '#FFB6C1'}},
     {id: 10, name: 'Подарки', icon: {id: 9,value: 'gift', color: '#8A2BE2'}}
