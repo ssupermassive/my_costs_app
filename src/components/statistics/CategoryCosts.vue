@@ -1,5 +1,8 @@
 <template>
-  <div class="mc-CategoryCosts flexbox flex-column align-items-center" :title="item.name">
+  <div
+    class="mc-CategoryCosts flexbox flex-column align-items-center"
+    :title="item.name"
+  >
     <b-icon
       class="mc-CategoryCosts__icon"
       :icon="item.icon.value"
@@ -15,7 +18,7 @@
 export default {
   name: "category-costs",
   props: {
-    item: Object
+    item: Object,
   },
 };
 </script>
@@ -24,6 +27,8 @@ export default {
 .mc-CategoryCosts {
   &__icon {
     font-size: 5rem;
+    position: relative;
+    top: 4px;
   }
   &__part {
     padding: 4px 0;

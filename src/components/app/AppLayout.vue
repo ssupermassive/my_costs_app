@@ -89,6 +89,7 @@ export default {
   width: 100%;
   height: 100%;
   max-width: 1024px;
+  min-width: 350px;
   box-shadow: 0px 4px 5px 3px rgba(0, 0, 0, 0.2);
 
   &-content {
