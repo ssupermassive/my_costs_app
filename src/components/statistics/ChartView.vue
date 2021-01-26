@@ -10,13 +10,7 @@ export default {
       const { data, colors } = this.$store.state.costs.statistics;
 
       return {
-        title: {
-          text: this.$store.state.costs.total.toLocaleString(),
-          align: "center",
-          verticalAlign: "middle",
-          y: 30,
-          style: { fontSize: "2rem", fontWeight: "bold", color: "white" },
-        },
+        title: this.getDefaultTitle(),
         chart: {
           backgroundColor: "#343a40",
           plotBackgroundColor: null,
@@ -65,9 +59,25 @@ export default {
       if (serie) {
         const point = serie.points.find((point) => point.id === id);
 
-        if(point) {
+        if (point) {
           point.select();
+          const titleData = this.getDefaultTitle();
+
+          if (point.selected) {
+            titleData.text = point.y.toLocaleString();
+          }
+
+          this.$refs.highcharts.chart.setTitle(titleData);
         }
+      }
+    },
+    getDefaultTitle() {
+      return {
+        text: this.$store.state.costs.total.toLocaleString(),
+        align: "center",
+        verticalAlign: "middle",
+        y: 30,
+        style: { fontSize: "2rem", fontWeight: "bold", color: "white" },
       }
     }
   }
