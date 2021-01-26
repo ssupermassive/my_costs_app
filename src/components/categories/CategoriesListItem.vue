@@ -258,9 +258,9 @@ export default {
   }
 
   &__editingButtons {
-    padding: 4px 8px 4px 0;
+    padding: 0.25rem 0.5rem 0.25rem 0;
     position: absolute;
-    bottom: -32px;
+    bottom: -1.7rem;
     right: 0;
     display: flex;
     font-size: 1.5rem;

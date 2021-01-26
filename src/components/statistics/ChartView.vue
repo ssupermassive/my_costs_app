@@ -76,7 +76,6 @@ export default {
         text: this.$store.state.costs.total.toLocaleString(),
         align: "center",
         verticalAlign: "middle",
-        y: 30,
         style: { fontSize: "2rem", fontWeight: "bold", color: "white" },
       }
     }
