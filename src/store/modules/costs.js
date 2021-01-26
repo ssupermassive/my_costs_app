@@ -1,5 +1,7 @@
 import {DATA_TOKEN, DEFAULT_COSTS, DEMO_COSTS} from '../data/costs';
 
+const MAX_ITEMS_BY_CATEGORY = 12;
+
 export default {
     state: () => ({
         items: [],
@@ -86,7 +88,29 @@ export default {
                     ...item,
                     part
                 }
-            });
+            })
+
+            // ищем все записи с ненулевой суммой
+            const itemsWithTotal = result.filter((item) => !!item.total);
+
+            // если таких записей больше 12 (столько выводится на экране),
+            // то схлопнем 12-ю и все что за ней в одну служебную.
+            if (itemsWithTotal.length > MAX_ITEMS_BY_CATEGORY) {
+                const service = itemsWithTotal.slice(MAX_ITEMS_BY_CATEGORY - 1).reduce(
+                    (prev, item) => {
+                        prev.total += item.total;
+                        prev.part += item.part;
+                        return prev;
+                    },
+                    {total: 0, part: 0}
+                );
+                service.id = -1;
+                service.name = 'Другие';
+                service.icon = {id: -1, value: 'three-dots', color: '#CCCCCC'};
+                itemsWithTotal.length = MAX_ITEMS_BY_CATEGORY;
+                itemsWithTotal[MAX_ITEMS_BY_CATEGORY - 1] = service;
+                result = itemsWithTotal;
+            }
 
             return Promise.resolve(
                 {

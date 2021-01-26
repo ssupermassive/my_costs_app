@@ -25,7 +25,7 @@ export default {
             newItem.id = Date.now();
             const items = [...store.state.items, newItem];
             await store.dispatch('saveCategoriesInStore', items);
-            await store.dispatch('recalculateCostsByCategory', store.state.items)
+            await store.dispatch('recalculateCostsByCategory', store.rootState.costs.items)
         },
         updateCategory(store, item) {
             const items = store.state.items.map((current) => {
