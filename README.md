@@ -1,4 +1,4 @@
-# first-proj
+# my-costs
 
 ## Project setup
 ```

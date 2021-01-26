@@ -1,5 +1,5 @@
 <template>
-  <highcharts ref="chart" class="mc-ChartView" :options="chartOptions" />
+  <highcharts ref="highcharts" class="mc-ChartView" :options="chartOptions" />
 </template>
 
 <script>
@@ -58,6 +58,19 @@ export default {
       };
     },
   },
+  methods: {
+    togglePointSelect(id) {
+      const [serie] = this.$refs.highcharts.chart.series;
+
+      if (serie) {
+        const point = serie.points.find((point) => point.id === id);
+
+        if(point) {
+          point.select();
+        }
+      }
+    }
+  }
 };
 </script>
 

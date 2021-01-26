@@ -9,6 +9,8 @@
           :key="item.id"
           class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
           :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
+          @mouseover="_categoryCostMouseOver(item.id)"
+          @mouseout="_categoryCostMouseOut(item.id)"
         >
           <category-costs :item="item" />
         </div>
@@ -24,6 +26,8 @@
             :key="item.id"
             class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
             :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
+            @mouseover="_categoryCostMouseOver(item.id)"
+            @mouseout="_categoryCostMouseOut(item.id)"
           >
             <category-costs :item="item" />
           </div>
@@ -31,17 +35,22 @@
       </div>
       <div
         class="mc-ChartLayout__center-middle flex-grow-1 flex-shrink-1">
-          <chart-view @pointMouseOut="pointMouseOutHandler" @pointMouseOver="pointMouseOverHandler"/>
+          <chart-view 
+            ref="chartView"
+            @pointMouseOut="pointMouseOutHandler" 
+            @pointMouseOver="pointMouseOverHandler"/>
         </div>
       <div
         class="mc-ChartLayout__center-right justify-content-around align-items-center flexbox flex-column flex-grow-0 flex-shrink-0"
       >
         <template v-if="rightData">
-          <div
+          <div 
             v-for="item in rightData"
             :key="item.id"
             class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
             :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
+            @mouseover="_categoryCostMouseOver(item.id)"
+            @mouseout="_categoryCostMouseOut(item.id)"
           >
             <category-costs :item="item" />
           </div>
@@ -57,6 +66,8 @@
           :key="item.id"
           class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
           :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
+          @mouseover="_categoryCostMouseOver(item.id)"
+          @mouseout="_categoryCostMouseOut(item.id)"
         >
           <category-costs :item="item"/>
         </div>
@@ -120,6 +131,14 @@ export default {
     },
     pointMouseOutHandler() {
       this.selectedCategory = null;
+    },
+    _categoryCostMouseOver(id) {
+      this.selectedCategory = id;
+      this.$refs.chartView.togglePointSelect(id);
+    },
+    _categoryCostMouseOut(id) {
+      this.selectedCategory = null;
+      this.$refs.chartView.togglePointSelect(id);
     }
   },
 };
