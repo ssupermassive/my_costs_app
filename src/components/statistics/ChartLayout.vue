@@ -152,7 +152,7 @@ export default {
     &-left,
     &-right {
       width: 25%;
-      padding: 0 2rem;
+      padding: 0 1rem;
     }
 
     &-middle {
@@ -162,12 +162,12 @@ export default {
 
   &__top,
   &__bottom {
-    padding: 2rem 0;
+    padding: 1rem 0;
   }
 
   &__category {
-    width: 8rem;
-    height: 8rem;
+    width: 7rem;
+    height: 7rem;
 
     &-selected {
       background-color: rgba($color: #CCC, $alpha: 0.5);

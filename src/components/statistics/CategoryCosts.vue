@@ -26,7 +26,7 @@ export default {
 <style lang="scss" scoped>
 .mc-CategoryCosts {
   &__icon {
-    font-size: 5rem;
+    font-size: 4.5rem;
     position: relative;
     top: 4px;
   }
