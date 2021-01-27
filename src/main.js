@@ -7,6 +7,8 @@ import HighchartsVue from 'highcharts-vue'
 import App from './App.vue';
 import categories from './store/modules/categories';
 import costs from './store/modules/costs';
+import {INIT_COSTS_DATA}  from './store/actionsType/costs';
+import {INIT_CATEGORIES_DATA}  from './store/actionsType/categories';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -30,8 +32,8 @@ const APP = new Vue({
   render: h => h(App),
 })
 
-store.dispatch('initCategoriesData').then(()=> {
-  store.dispatch('initCostsData').then(()=> {
+store.dispatch(INIT_CATEGORIES_DATA).then(()=> {
+  store.dispatch(INIT_COSTS_DATA).then(()=> {
     APP.$mount('#app');
   })
 });

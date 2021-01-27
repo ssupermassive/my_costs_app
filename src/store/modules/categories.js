@@ -5,54 +5,76 @@ import {
     DEMO_CATEGORIES
 } from '../data/categories';
 
+import {
+    UPDATE_CATEGORIES,
+    UPDATE_CATEGORIES_STATE
+} from '../mutationsType/categories';
+
+import {
+    CREATE_CATEGORY,
+    UPDATE_CATEGORY,
+    DELETE_CATEGORY,
+    SAVE_CATEGORIES_TO_STORE,
+    INIT_CATEGORIES_DATA,
+    APPLY_DEMO_CATEGORIES,
+} from '../actionsType/categories';
+
+import {
+    DELETE_COSTS_BY_CATEGORY,
+    UPDATE_COSTS_BY_CATEGORY_DATA
+} from '../actionsType/costs';
+
+
+
 export default {
     state: () => ({
        items: [],
        icons: []
     }),
     mutations: {
-        updateCategories(state, categories) {
+        [UPDATE_CATEGORIES](state, categories) {
             state.items = categories;
         },
-        updateCategoriesStoreState(state, data) {
+        [UPDATE_CATEGORIES_STATE](state, data) {
             state.icons = data.icons;
             state.items = data.items;
         }
     },
     actions: {
-        async createCategory(store, item) {
+        async [CREATE_CATEGORY](store, item) {
             const newItem = {...item};
             newItem.id = Date.now();
             const items = [...store.state.items, newItem];
-            await store.dispatch('saveCategoriesInStore', items);
-            await store.dispatch('recalculateCostsByCategory', store.rootState.costs.items)
+            await store.dispatch(SAVE_CATEGORIES_TO_STORE, items);
+            await store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, store.rootState.costs.items)
         },
-        updateCategory(store, item) {
+        async [UPDATE_CATEGORY](store, item) {
             const items = store.state.items.map((current) => {
                 return current.id === item.id ? {...item} : {...current}
             });
-            return store.dispatch('saveCategoriesInStore', items);
+            await store.dispatch(SAVE_CATEGORIES_TO_STORE, items);
+            await store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, store.rootState.costs.items)
         },
-        async deleteCategory(store, id) {
+        async [DELETE_CATEGORY](store, id) {
             const items = store.state.items.filter((item) => item.id !== id);
 
             await Promise.all(
                 [
-                store.dispatch('saveCategoriesInStore', items),
-                store.dispatch('deleteCostsByCategory', id)
+                store.dispatch(SAVE_CATEGORIES_TO_STORE, items),
+                store.dispatch(DELETE_COSTS_BY_CATEGORY, id)
                 ]
             )
         },
-        saveCategoriesInStore(store, items) {
+        [SAVE_CATEGORIES_TO_STORE](store, items) {
             localStorage.setItem(DATA_TOKEN, JSON.stringify(items));
-            store.commit('updateCategories', items);
+            store.commit(UPDATE_CATEGORIES, items);
             return Promise.resolve();
         }, 
-        initCategoriesData(store) {
+        [INIT_CATEGORIES_DATA](store) {
             const savedData = localStorage.getItem(DATA_TOKEN);
             const items = savedData ? JSON.parse(savedData) : DEFAULT_CATEGORIES;
             store.commit(
-                'updateCategoriesStoreState', 
+                UPDATE_CATEGORIES_STATE, 
                 {
                     items,
                     icons: CATEGORIES_ICONS
@@ -60,8 +82,8 @@ export default {
             );
             return Promise.resolve();
         },
-        async applyDemoCategories(store) {
-            store.dispatch('saveCategoriesInStore', DEMO_CATEGORIES);
+        async [APPLY_DEMO_CATEGORIES](store) {
+            store.dispatch(SAVE_CATEGORIES_TO_STORE, DEMO_CATEGORIES);
         }
     }
 }

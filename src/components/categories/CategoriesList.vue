@@ -23,6 +23,7 @@
 
 <script>
 import CategoriesListItem from "./CategoriesListItem";
+import {DELETE_CATEGORY, CREATE_CATEGORY, UPDATE_CATEGORY} from '../../store/actionsType/categories';
 
 export default {
   name: "categories-list",
@@ -47,18 +48,18 @@ export default {
       this.editingItem = null;
     },
     $deleteItem(id) {
-      this.$store.dispatch('deleteCategory', id);
+      this.$store.dispatch(DELETE_CATEGORY, id);
     },
     $editCompleteHandler(item) {
       if (this.checkValidation(item)) {
-        this.$store.dispatch("updateCategory", item).then(() => {
+        this.$store.dispatch(UPDATE_CATEGORY, item).then(() => {
           this.$cancelEdit();
         });
       }
     },
     $createCompleteHandler(item) {
       if (this.checkValidation(item)) {
-        this.$store.dispatch("createCategory", item).then(() => {
+        this.$store.dispatch(CREATE_CATEGORY, item).then(() => {
           this.$cancelEdit();
         });
       }

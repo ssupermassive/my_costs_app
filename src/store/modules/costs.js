@@ -1,5 +1,28 @@
 import {DATA_TOKEN, DEFAULT_COSTS, DEMO_COSTS} from '../data/costs';
 
+import {
+    UPDATE_STATISTICS,
+    UPDATE_DETAILING,
+    UPDATE_COSTS,
+    UPDATE_COSTS_BY_CATEGORY,
+    UPDATE_TOTAL,   
+    UPDATE_COSTS_STATE
+} from '../mutationsType/costs';
+
+import {
+    COMPUTE_STATISTICS,
+    COMPUTE_DETAILING,
+    COMPUTE_COSTS_BY_CATEGORY,
+    CREATE_COST,
+    SAVE_COSTS_TO_STORE,
+    DELETE_COSTS_BY_CATEGORY,
+    INIT_COSTS_DATA,
+    APPLY_DEMO_COSTS,
+    UPDATE_DETAILING_DATA,
+    UPDATE_STATISTICS_DATA,
+    UPDATE_COSTS_BY_CATEGORY_DATA,
+}  from '../actionsType/costs';
+
 const MAX_ITEMS_BY_CATEGORY = 12;
 
 export default {
@@ -11,22 +34,22 @@ export default {
         total: 0
     }),
     mutations: {
-        updateStatisticsData(state, statistics) {
+        [UPDATE_STATISTICS](state, statistics) {
             state.statistics = statistics;
         },
-        updateDetailingData(state, detailing) {
+        [UPDATE_DETAILING](state, detailing) {
             state.detailing = detailing;
         },
-        updateCostsItems(state, items) {
+        [UPDATE_COSTS](state, items) {
             state.items = items;
         },
-        updateCostsItemsByCategory(state, itemsByCategory) {
+        [UPDATE_COSTS_BY_CATEGORY](state, itemsByCategory) {
             state.itemsByCategory = itemsByCategory;
         },
-        updateTotalCosts(state, total) {
+        [UPDATE_TOTAL](state, total) {
             state.total = total;
         },
-        updateCostsState(state, data) {
+        [UPDATE_COSTS_STATE](state, data) {
             state.items = data.items;
             state.itemsByCategory = data.itemsByCategory;
             state.detailing = data.detailing;
@@ -35,22 +58,23 @@ export default {
         }
     },
     actions: {
-        async recalculateStatisticsData(store, items) {
-            const data = await store.dispatch('getStatisticsData', items);
-            this.commit('updateStatisticsData', data);
+        async [UPDATE_STATISTICS_DATA](store, items) {
+            const data = await store.dispatch(COMPUTE_STATISTICS, items);
+            this.commit(UPDATE_STATISTICS, data);
         },
-        recalculateDetailingData() {
+        [UPDATE_DETAILING_DATA]() {
+            // ToDo
             return Promise.resolve();
         },
-        async recalculateCostsByCategory(store, items) {
+        async [UPDATE_COSTS_BY_CATEGORY_DATA](store, items) {
             const {
                 itemsByCategory, 
                 total
-            } = await store.dispatch('getCostsGroupedByCategory', items);
-            store.commit('updateCostsItemsByCategory', itemsByCategory);
-            store.commit('updateTotalCosts', total);
+            } = await store.dispatch(COMPUTE_COSTS_BY_CATEGORY, items);
+            store.commit(UPDATE_COSTS_BY_CATEGORY, itemsByCategory);
+            store.commit(UPDATE_TOTAL, total);
         },
-        getCostsGroupedByCategory(store, data) {
+        [COMPUTE_COSTS_BY_CATEGORY](store, data) {
 
             const items = data || store.state.items;
             let totalCosts = 0;
@@ -119,7 +143,7 @@ export default {
                 }
             );
         },
-        getStatisticsData(store, items) {
+        [COMPUTE_STATISTICS](store, items) {
                 const colors = []
     
                 const data = items.filter((item) => {
@@ -141,47 +165,52 @@ export default {
                     colors
                 });
         },
-        async createCost(store, item) {
+        [COMPUTE_DETAILING]() {
+            // ToDo
+            return Promise.resolve();
+
+        },
+        async [CREATE_COST](store, item) {
             const newItem = {...item};
             newItem.id = Date.now();
             const items = [newItem, ...store.state.items];
             
             await Promise.all(
                 [
-                    store.dispatch('saveCostsInStore', items),
-                    store.dispatch('recalculateCostsByCategory', items)
+                    store.dispatch(SAVE_COSTS_TO_STORE, items),
+                    store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, items)
                 ]
             );
-            await store.dispatch('recalculateStatisticsData', store.state.itemsByCategory);
+            await store.dispatch(UPDATE_STATISTICS_DATA, store.state.itemsByCategory);
         },
-        async saveCostsInStore(store, items) {
+        async [SAVE_COSTS_TO_STORE](store, items) {
             localStorage.setItem(DATA_TOKEN, JSON.stringify(items));
-            store.commit('updateCostsItems', items);
+            store.commit(UPDATE_COSTS, items);
         },
-        async deleteCostsByCategory(store, categoryKey) {
+        async [DELETE_COSTS_BY_CATEGORY](store, categoryKey) {
             const items = store.state.items.filter((item) => {
                 return item.category !== categoryKey
             });
 
             await Promise.all(
                 [
-                    store.dispatch('saveCostsInStore', items),
-                    store.dispatch('recalculateCostsByCategory', items)
+                    store.dispatch(SAVE_COSTS_TO_STORE, items),
+                    store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, items)
                 ]
             );
-            await store.dispatch('recalculateStatisticsData', store.state.itemsByCategory);
+            await store.dispatch(UPDATE_STATISTICS_DATA, store.state.itemsByCategory);
         },
-        async initCostsData(store) {
+        async [INIT_COSTS_DATA](store) {
             const savedData = localStorage.getItem(DATA_TOKEN);
             const items = savedData ? JSON.parse(savedData) : DEFAULT_COSTS;
-            const { itemsByCategory, total } = await store.dispatch('getCostsGroupedByCategory', items);
+            const { itemsByCategory, total } = await store.dispatch(COMPUTE_COSTS_BY_CATEGORY, items);
             const [ statistics, detailing ] = await Promise.all([
-                store.dispatch('getStatisticsData', itemsByCategory),
-                store.dispatch('recalculateDetailingData', itemsByCategory),
+                store.dispatch(COMPUTE_STATISTICS, itemsByCategory),
+                store.dispatch(COMPUTE_DETAILING, itemsByCategory),
             ]);
 
             this.commit(
-                'updateCostsState',
+                UPDATE_COSTS_STATE,
                 {
                     items,
                     itemsByCategory,
@@ -191,14 +220,14 @@ export default {
                 }
             );
         },
-        async applyDemoCosts(store) {
+        async [APPLY_DEMO_COSTS](store) {
             await Promise.all(
                 [
-                    store.dispatch('saveCostsInStore', DEMO_COSTS),
-                    store.dispatch('recalculateCostsByCategory', DEMO_COSTS)
+                    store.dispatch(SAVE_COSTS_TO_STORE, DEMO_COSTS),
+                    store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, DEMO_COSTS)
                 ]
             );
-            await store.dispatch('recalculateStatisticsData', store.state.itemsByCategory);
+            await store.dispatch(UPDATE_STATISTICS_DATA, store.state.itemsByCategory);
         }
     }
 };

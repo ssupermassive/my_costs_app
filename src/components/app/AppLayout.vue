@@ -42,6 +42,8 @@
 import ChartLayout from "../statistics/ChartLayout.vue";
 import CostsDialog from "../costs/CostsDialog";
 import AppSettings from "./AppSettings";
+import {APPLY_DEMO_CATEGORIES} from '../../store/actionsType/categories';
+import {APPLY_DEMO_COSTS} from '../../store/actionsType/costs';
 
 const MC_DEMO_DATA_APPLIED = "MC_IS_DEMO_DATA";
 
@@ -73,8 +75,8 @@ export default {
         }
       ).then(async (result) => {
         if (result) {
-          await this.$store.dispatch('applyDemoCategories');
-          await this.$store.dispatch('applyDemoCosts');
+          await this.$store.dispatch(APPLY_DEMO_CATEGORIES);
+          await this.$store.dispatch(APPLY_DEMO_COSTS);
           localStorage.setItem(MC_DEMO_DATA_APPLIED, true); 
           this.demoDataButtonVisible = false;
         }

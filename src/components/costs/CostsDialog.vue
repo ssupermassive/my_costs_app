@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import {CREATE_COST} from '../../store/actionsType/costs';
+
 const MAX_SUM_FRACTION_COUNT = 2;
 
 export default {
@@ -103,7 +105,7 @@ export default {
      */
     submitHandler(event) {
       event.preventDefault();
-      this.$store.dispatch("createCost", this.itemData).then(() => {
+      this.$store.dispatch(CREATE_COST, this.itemData).then(() => {
           this.itemData = this.$getDefaultItemData();
           this.$bvModal.hide(this.$attrs.id);
       });
