@@ -12,13 +12,8 @@
 </template>
 
 <script>
-import { BIcon } from "bootstrap-vue";
-
 export default {
   name: "category-icons-list",
-  components: {
-    BIcon
-  },
   methods: {
     itemClick(item) {
       this.$emit('itemClick', item);

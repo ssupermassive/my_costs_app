@@ -4,8 +4,8 @@
       v-if="isAdd"
       ref="list-item-add"
       :editMode="true"
-      @editComplete="$createCompleteHandler"
-      @cancelEdit="$cancelEdit"
+      @editComplete="createCompleteHandler"
+      @cancelEdit="cancelEdit"
     />
     <categories-list-item
       v-for="item in $store.state.categories.items"
@@ -13,53 +13,61 @@
       :item="item"
       :key="item.id"
       :editMode="editingItem === item"
-      @editComplete="$editCompleteHandler"
-      @cancelEdit="$cancelEdit"
-      @deleteItem="$deleteItem"
-      @itemClick="$itemClickHandler(item)"
+      @editComplete="editCompleteHandler"
+      @cancelEdit="cancelEdit"
+      @deleteItem="deleteItem"
+      @itemClick="itemClickHandler(item)"
     />
   </div>
 </template>
 
 <script>
 import CategoriesListItem from "./CategoriesListItem";
-import {DELETE_CATEGORY, CREATE_CATEGORY, UPDATE_CATEGORY} from '../../store/actionsType/categories';
+import {
+  DELETE_CATEGORY,
+  CREATE_CATEGORY,
+  UPDATE_CATEGORY
+} from "../../store/actionsType/categories";
 
 export default {
   name: "categories-list",
   components: {
-    CategoriesListItem,
+    CategoriesListItem
   },
-  data: function () {
+  data: function() {
     return {
       editingItem: null,
-      isAdd: false,
+      isAdd: false
     };
   },
+  computed: {
+    isEditing() {
+      return !!(this.isAdd || this.editingItem)
+    }
+  },
   methods: {
-    $itemClickHandler(item) {
+    itemClickHandler(item) {
       if (this.canEditItem()) {
         this.editingItem = item;
         this.isAdd = false;
       }
     },
-    $cancelEdit() {
+    cancelEdit() {
       this.isAdd = false;
       this.editingItem = null;
     },
-    $deleteItem(id) {
+    deleteItem(id) {
       this.$store.dispatch(DELETE_CATEGORY, id);
     },
-    $editCompleteHandler(item) {
-      if (this.checkValidation(item)) {
-        this.$store.dispatch(UPDATE_CATEGORY, item).then(() => {
-          this.$cancelEdit();
-        });
-      }
+    editCompleteHandler(item) {
+      this.processingItem(item, UPDATE_CATEGORY);
     },
-    $createCompleteHandler(item) {
-      if (this.checkValidation(item)) {
-        this.$store.dispatch(CREATE_CATEGORY, item).then(() => {
+    createCompleteHandler(item) {
+      this.processingItem(item, CREATE_CATEGORY);
+    },
+    processingItem(item, operation) {
+      if (this.validateItem(item)) {
+        this.$store.dispatch(operation, item).then(() => {
           this.$cancelEdit();
         });
       }
@@ -71,29 +79,28 @@ export default {
       }
     },
     getListItemRef(item) {
+      const reference = this.$refs[`list-item-${(item && item.id) || "add"}`];
 
-      // ToDo для динамически сформированных референсов тут почему то массив
-      const reference =  this.$refs[`list-item-${(item && item.id) || "add"}`];
-
+      // для динамически сформированных референсов тут почему то массив
       if (Array.isArray(reference)) {
-          const [ref] = reference;
-          return ref;
+        const [ref] = reference;
+        return ref;
       }
 
       return reference;
     },
-    checkValidation(item) {
+    validateItem(item) {
       const listItemRef = this.getListItemRef(item);
       return listItemRef && listItemRef.validate();
     },
     canEditItem() {
-      if (this.isAdd || this.editingItem) {
-        return this.checkValidation(this.editingItem);
+      if (this.isEditing) {
+        return this.validateItem(this.editingItem);
       }
 
       return true;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -27,7 +27,10 @@
       placeholder="Название..."
       required
     />
-    <div v-else class="me-CategoriesListItem-text text-truncate">
+    <div
+      v-else
+      class="me-CategoriesListItem-text text-truncate"
+    >
       {{ itemData.name }}
     </div>
     <div
@@ -91,17 +94,12 @@
 </template>
 
 <script>
-import { BIcon, BForm, BFormInput, BPopover } from "bootstrap-vue";
 import CategoryIconsList from "./CategoryIconsList";
 
 export default {
   name: "categories-list-item",
   components: {
-    BIcon,
-    BForm,
-    BFormInput,
-    BPopover,
-    CategoryIconsList,
+    CategoryIconsList
   },
   props: {
     item: {
@@ -110,26 +108,26 @@ export default {
         return {
           id: null,
           name: "",
-          icon: null,
+          icon: null
         };
-      },
+      }
     },
     editMode: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
-  data: function () {
+  data: function() {
     return {
       showPopover: false,
-      itemData: {...this.item},
+      itemData: { ...this.item },
       showActionsButtons: false,
       validationState: {
         inputValid: null,
         popoverShow: false,
         popoverDisabled: true,
-        message: "",
-      },
+        message: ""
+      }
     };
   },
   computed: {
@@ -150,7 +148,7 @@ export default {
     },
     formId() {
       return `form-${this.item.id}`;
-    },
+    }
   },
   methods: {
     editComplete() {
@@ -182,7 +180,7 @@ export default {
         inputValid: hasText ? null : false,
         popoverDisabled: false,
         popoverShow: true,
-        message: hasText ? "Выберите иконку" : "Укажите название",
+        message: hasText ? "Выберите иконку" : "Укажите название"
       });
 
       return false;
@@ -195,31 +193,32 @@ export default {
         inputValid: null,
         popoverDisabled: true,
         popoverShow: false,
-        message: "",
+        message: ""
       });
     },
     deleteItem() {
-      this.$emit('deleteItem', this.itemData.id);
+      this.$emit("deleteItem", this.itemData.id);
     },
     mouseoverHandler() {
       this.showActionsButtons = true;
     },
     mouseoutHandler(event) {
+      if (!event.relatedTarget) {
+        this.showActionsButtons = false;
+        return;
+      }
 
-        if (!event.relatedTarget) {
-          this.showActionsButtons = false;
-          return;
-        }
-
-        const closes = event.relatedTarget.closest('.me-CategoriesListItem');
-        this.showActionsButtons = closes && closes.attributes['id'].value === this.formId;
+      // если курсор перешел на дочерний элемент, то не нужно прятать операции
+      const closes = event.relatedTarget.closest(".me-CategoriesListItem");
+      this.showActionsButtons =
+        closes && closes.attributes["id"].value === this.formId;
     }
   },
   watch: {
     item(newValue) {
-      this.itemData = {...newValue};
-    },
-  },
+      this.itemData = { ...newValue };
+    }
+  }
 };
 </script>
 
