@@ -68,7 +68,7 @@ export default {
     processingItem(item, operation) {
       if (this.validateItem(item)) {
         this.$store.dispatch(operation, item).then(() => {
-          this.$cancelEdit();
+          this.cancelEdit();
         });
       }
     },
