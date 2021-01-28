@@ -16,10 +16,10 @@
 
 <script>
 export default {
-  name: "category-costs",
+  name: "cost-item",
   props: {
-    item: Object,
-  },
+    item: Object
+  }
 };
 </script>
 

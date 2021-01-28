@@ -1,75 +1,67 @@
 <template>
   <div class="mc-ChartLayout flexbox flex-column flex-grow-1 flex-shrink-1">
-    <div
-      class="mc-ChartLayout__top flexbox justify-content-around flex-grow-0 flex-shrink-0"
-    >
+    <div class="mc-ChartLayout__top flexbox justify-content-around flex-grow-0 flex-shrink-0">
       <template v-if="topData">
         <div
           v-for="item in topData"
           :key="item.id"
           class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
           :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
-          @mouseover="_categoryCostMouseOver(item.id)"
-          @mouseout="_categoryCostMouseOut(item.id)"
+          @mouseover="costItemMouseOver(item.id)"
+          @mouseout="costItemMouseOut(item.id)"
         >
-          <category-costs :item="item" />
+          <cost-item :item="item" />
         </div>
       </template>
     </div>
     <div class="mc-ChartLayout__center flexbox flex-grow-1 flex-shrink-1">
-      <div
-        class="mc-ChartLayout__center-left flexbox justify-content-around align-items-center flex-column flex-grow-0 flex-shrink-0"
-      >
+      <div class="mc-ChartLayout__center-left flexbox justify-content-around align-items-center flex-column flex-grow-0 flex-shrink-0">
         <template v-if="leftData">
           <div
             v-for="item in leftData"
             :key="item.id"
             class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
             :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
-            @mouseover="_categoryCostMouseOver(item.id)"
-            @mouseout="_categoryCostMouseOut(item.id)"
+            @mouseover="costItemMouseOver(item.id)"
+            @mouseout="costItemMouseOut(item.id)"
           >
-            <category-costs :item="item" />
+            <cost-item :item="item" />
           </div>
         </template>
       </div>
-      <div
-        class="mc-ChartLayout__center-middle flex-grow-1 flex-shrink-1">
-          <chart-view 
-            ref="chartView"
-            @pointMouseOut="pointMouseOutHandler" 
-            @pointMouseOver="pointMouseOverHandler"/>
-        </div>
-      <div
-        class="mc-ChartLayout__center-right justify-content-around align-items-center flexbox flex-column flex-grow-0 flex-shrink-0"
-      >
+      <div class="mc-ChartLayout__center-middle flex-grow-1 flex-shrink-1">
+        <chart-view
+          ref="chartView"
+          @pointMouseOut="pointMouseOutHandler"
+          @pointMouseOver="pointMouseOverHandler"
+        />
+      </div>
+      <div class="mc-ChartLayout__center-right justify-content-around align-items-center flexbox flex-column flex-grow-0 flex-shrink-0">
         <template v-if="rightData">
-          <div 
+          <div
             v-for="item in rightData"
             :key="item.id"
             class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
             :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
-            @mouseover="_categoryCostMouseOver(item.id)"
-            @mouseout="_categoryCostMouseOut(item.id)"
+            @mouseover="costItemMouseOver(item.id)"
+            @mouseout="costItemMouseOut(item.id)"
           >
-            <category-costs :item="item" />
+            <cost-item :item="item" />
           </div>
         </template>
       </div>
     </div>
-    <div
-      class="mc-ChartLayout__bottom flexbox justify-content-around flex-grow-0 flex-shrink-0"
-    >
+    <div class="mc-ChartLayout__bottom flexbox justify-content-around flex-grow-0 flex-shrink-0">
       <template v-if="bottomData">
         <div
           v-for="item in bottomData"
           :key="item.id"
           class="mc-ChartLayout__category flexbox justify-content-center align-items-center"
           :class="{'mc-ChartLayout__category-selected': item.id === selectedCategory}"
-          @mouseover="_categoryCostMouseOver(item.id)"
-          @mouseout="_categoryCostMouseOut(item.id)"
+          @mouseover="costItemMouseOver(item.id)"
+          @mouseout="costItemMouseOut(item.id)"
         >
-          <category-costs :item="item"/>
+          <cost-item :item="item" />
         </div>
       </template>
     </div>
@@ -77,8 +69,8 @@
 </template>
 
 <script>
-import CategoryCosts from './CategoryCosts';
-import ChartView from './ChartView';
+import CostItem from "../costs/CostItem";
+import ChartView from "./ChartView";
 
 const TOP_DATA_INTERVAL = [0, 4];
 const LEFT_DATA_INTERVAL = [4, 6];
@@ -88,13 +80,13 @@ const BOTTOM_DATA_INTERVAL = [8, 12];
 export default {
   name: "chart-layout",
   components: {
-    CategoryCosts,
+    CostItem,
     ChartView
   },
   data() {
     return {
       selectedCategory: null
-    }
+    };
   },
   computed: {
     topData() {
@@ -111,7 +103,7 @@ export default {
     },
     hasItems() {
       return !!this.$store.state.categories.items.length;
-    },
+    }
   },
   methods: {
     getData(interval) {
@@ -132,15 +124,15 @@ export default {
     pointMouseOutHandler() {
       this.selectedCategory = null;
     },
-    _categoryCostMouseOver(id) {
+    costItemMouseOver(id) {
       this.selectedCategory = id;
       this.$refs.chartView.togglePointSelect(id);
     },
-    _categoryCostMouseOut(id) {
+    costItemMouseOut(id) {
       this.selectedCategory = null;
       this.$refs.chartView.togglePointSelect(id);
     }
-  },
+  }
 };
 </script>
 
@@ -170,10 +162,9 @@ export default {
     height: 7rem;
 
     &-selected {
-      background-color: rgba($color: #CCC, $alpha: 0.5);
+      background-color: rgba($color: #ccc, $alpha: 0.5);
       border-radius: 50%;
     }
   }
 }
-
 </style>

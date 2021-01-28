@@ -9,13 +9,13 @@
     backdrop
   >
     <template #title>
-      <div class="me-AppSettings__title align-items-center">
+      <div class="me-AppSettings__title flexbox align-items-center">
         <b-icon
           variant="light"
           class="me-AppSettings__add"
           icon="plus-circle"
           title="+ Категория"
-          @click="$addCategory()"
+          @click="addCategory()"
         />
         Категории
       </div>
@@ -29,13 +29,13 @@ import CategoriesList from "../categories/CategoriesList";
 
 export default {
   components: {
-    CategoriesList,
+    CategoriesList
   },
   methods: {
-    $addCategory: function () {
+    addCategory: function() {
       this.$refs.categoriesList.addCategory();
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -43,7 +43,6 @@ export default {
 .me-AppSettings {
   &__title {
     color: var(--light);
-    display: flex;
   }
 
   &__add {

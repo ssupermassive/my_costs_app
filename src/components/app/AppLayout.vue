@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="me-AppLayout flexbox flex-column align-items-center flex-grow-1 flex-shrink-1"
-  >
-    <header
-      class="me-AppLayout-header flexbox justify-content-between align-items-center flex-grow-0 flex-shrink-0"
-    >
+  <div class="me-AppLayout flexbox flex-column align-items-center flex-grow-1 flex-shrink-1">
+    <header class="me-AppLayout-header flexbox justify-content-between align-items-center flex-grow-0 flex-shrink-0">
       <h1 class="me-AppLayout-header-title">Мои Расходы</h1>
       <div class="mc-AppLayout-header-buttons flexbox align-items-center">
         <b-button
@@ -13,9 +9,9 @@
           variant="light"
           class="me-AppLayout-header-button"
           title="Заполнить демо - данными"
-          @click="applyDemoData"
-          >Заполнить</b-button
-        >
+          @click="applyDemoData">
+          Заполнить
+        </b-button>
         <b-icon
           title="Новый расход"
           v-b-modal.add-costs-modal
@@ -42,8 +38,8 @@
 import ChartLayout from "../statistics/ChartLayout.vue";
 import CostsDialog from "../costs/CostsDialog";
 import AppSettings from "./AppSettings";
-import {APPLY_DEMO_CATEGORIES} from '../../store/actionsType/categories';
-import {APPLY_DEMO_COSTS} from '../../store/actionsType/costs';
+import { APPLY_DEMO_CATEGORIES } from "../../store/actionsType/categories";
+import { APPLY_DEMO_COSTS } from "../../store/actionsType/costs";
 
 const MC_DEMO_DATA_APPLIED = "MC_IS_DEMO_DATA";
 
@@ -52,37 +48,38 @@ export default {
   components: {
     AppSettings,
     ChartLayout,
-    CostsDialog,
+    CostsDialog
   },
   data() {
     return {
-      demoDataButtonVisible: !JSON.parse(localStorage.getItem(MC_DEMO_DATA_APPLIED))
-    }
+      demoDataButtonVisible: !JSON.parse(
+        localStorage.getItem(MC_DEMO_DATA_APPLIED)
+      )
+    };
   },
   methods: {
     applyDemoData() {
-      this.$bvModal.msgBoxConfirm(
-        "Использовать демо - данные для наполнения?",
-        {
-          title: 'Подтвердите действие',
-          cancelTitle: 'Отмена',
-          okTitle: 'Да',
+      this.$bvModal
+        .msgBoxConfirm("Использовать демо - данные для наполнения?", {
+          title: "Подтвердите действие",
+          cancelTitle: "Отмена",
+          okTitle: "Да",
           headerTextVariant: "light",
           headerBgVariant: "secondary",
           headerBorderМariant: "secondary",
-          footerBorderVariant: 'light',
-          bodyClass: 'me-AppLayout__confirmation'
-        }
-      ).then(async (result) => {
-        if (result) {
-          await this.$store.dispatch(APPLY_DEMO_CATEGORIES);
-          await this.$store.dispatch(APPLY_DEMO_COSTS);
-          localStorage.setItem(MC_DEMO_DATA_APPLIED, true); 
-          this.demoDataButtonVisible = false;
-        }
-      });
-    },
-  },
+          footerBorderVariant: "light",
+          bodyClass: "me-AppLayout__confirmation"
+        })
+        .then(async result => {
+          if (result) {
+            await this.$store.dispatch(APPLY_DEMO_CATEGORIES);
+            await this.$store.dispatch(APPLY_DEMO_COSTS);
+            localStorage.setItem(MC_DEMO_DATA_APPLIED, true);
+            this.demoDataButtonVisible = false;
+          }
+        });
+    }
+  }
 };
 </script>
 
@@ -122,11 +119,11 @@ export default {
 
     &:after {
       content: " ";
-    height: 8px;
-    width: 100%;
-    position: absolute;
-    background: linear-gradient(180deg,rgba(0,0,0,.3), transparent);
-    bottom: -8px;
+      height: 8px;
+      width: 100%;
+      position: absolute;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent);
+      bottom: -8px;
     }
   }
 

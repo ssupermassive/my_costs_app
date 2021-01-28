@@ -1,9 +1,14 @@
 <template>
-  <b-modal body-bg-variant="dark" 
-           header-text-variant="light"
-           header-bg-variant="secondary"
-           header-border-variant="secondary"
-           :id="$attrs.id" :hide-footer="true" title="Новый расход">
+  <b-modal
+    @hide="resetItemData"
+    body-bg-variant="dark"
+    header-text-variant="light"
+    header-bg-variant="secondary"
+    header-border-variant="secondary"
+    :id="$attrs.id"
+    :hide-footer="true"
+    title="Новый расход"
+  >
     <b-form @submit="submitHandler">
       <b-form-datepicker
         class="mc-CostsDialog__input"
@@ -20,9 +25,10 @@
         text-field="name"
       >
         <template #first>
-          <b-form-select-option :value="null" disabled
-            >Укажите категорию</b-form-select-option
-          >
+          <b-form-select-option
+            :value="null"
+            disabled
+          >Укажите категорию</b-form-select-option>
         </template>
       </b-form-select>
       <b-form-input
@@ -43,15 +49,18 @@
         autocomplete="off"
         placeholder="Комментарий"
       ></b-form-input>
-      <b-button class="mc-CostsDialog__submit" type="submit" variant="primary"
-        >Добавить
+      <b-button
+        class="mc-CostsDialog__submit"
+        type="submit"
+        variant="primary"
+      >Добавить
       </b-button>
     </b-form>
   </b-modal>
 </template>
 
 <script>
-import {CREATE_COST} from '../../store/actionsType/costs';
+import { CREATE_COST } from "../../store/actionsType/costs";
 
 const MAX_SUM_FRACTION_COUNT = 2;
 
@@ -65,9 +74,9 @@ export default {
         category: null,
         date: new Date(),
         comment: null,
-        sum: null,
-      }),
-    },
+        sum: null
+      })
+    }
   },
   data() {
     return {
@@ -80,11 +89,11 @@ export default {
      * ToDo: регулярка?
      */
     sumFormatter(value) {
-      const [first] = value;
+
       let result = value;
 
-      // Если первый символ - ноль или мунус, то отбрасываем его
-      if (parseInt(first) === 0 || first === "-") {
+      // отсекаем минус и ведущий ноль
+      while(result.match(/^[0-]/)) {
         result = result.substr(1);
       }
 
@@ -97,29 +106,25 @@ export default {
         result = `${num}.${fraction.substr(0, MAX_SUM_FRACTION_COUNT)}`;
       }
 
-      return result;
+      return result.substr(0, 6);
     },
-
-    /**
-     * Обработка завершения редактирования
-     */
     submitHandler(event) {
       event.preventDefault();
       this.$store.dispatch(CREATE_COST, this.itemData).then(() => {
-          this.itemData = this.$getDefaultItemData();
-          this.$bvModal.hide(this.$attrs.id);
+        this.resetItemData();
+        this.$bvModal.hide(this.$attrs.id);
       });
     },
-    $getDefaultItemData() {
-      return {
+    resetItemData() {
+      this.itemData = {
         id: null,
         category: null,
         date: new Date(),
         comment: null,
-        sum: null,
+        sum: null
       };
-    },
-  },
+    }
+  }
 };
 </script>
 

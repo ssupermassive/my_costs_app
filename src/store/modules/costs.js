@@ -21,6 +21,7 @@ import {
     UPDATE_DETAILING_DATA,
     UPDATE_STATISTICS_DATA,
     UPDATE_COSTS_BY_CATEGORY_DATA,
+    APPLY_NEW_COSTS
 }  from '../actionsType/costs';
 
 const MAX_ITEMS_BY_CATEGORY = 12;
@@ -175,13 +176,7 @@ export default {
             newItem.id = Date.now();
             const items = [newItem, ...store.state.items];
             
-            await Promise.all(
-                [
-                    store.dispatch(SAVE_COSTS_TO_STORE, items),
-                    store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, items)
-                ]
-            );
-            await store.dispatch(UPDATE_STATISTICS_DATA, store.state.itemsByCategory);
+            await store.dispatch(APPLY_NEW_COSTS, items);
         },
         async [SAVE_COSTS_TO_STORE](store, items) {
             localStorage.setItem(DATA_TOKEN, JSON.stringify(items));
@@ -192,13 +187,7 @@ export default {
                 return item.category !== categoryKey
             });
 
-            await Promise.all(
-                [
-                    store.dispatch(SAVE_COSTS_TO_STORE, items),
-                    store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, items)
-                ]
-            );
-            await store.dispatch(UPDATE_STATISTICS_DATA, store.state.itemsByCategory);
+            await store.dispatch(APPLY_NEW_COSTS, items);
         },
         async [INIT_COSTS_DATA](store) {
             const savedData = localStorage.getItem(DATA_TOKEN);
@@ -220,14 +209,17 @@ export default {
                 }
             );
         },
-        async [APPLY_DEMO_COSTS](store) {
+        async [APPLY_NEW_COSTS](store, items) {
             await Promise.all(
                 [
-                    store.dispatch(SAVE_COSTS_TO_STORE, DEMO_COSTS),
-                    store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, DEMO_COSTS)
+                    store.dispatch(SAVE_COSTS_TO_STORE, items),
+                    store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, items)
                 ]
             );
             await store.dispatch(UPDATE_STATISTICS_DATA, store.state.itemsByCategory);
+        },
+        async [APPLY_DEMO_COSTS](store) {
+            await store.dispatch(APPLY_NEW_COSTS, DEMO_COSTS);
         }
     }
 };

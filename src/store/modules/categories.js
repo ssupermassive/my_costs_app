@@ -17,6 +17,7 @@ import {
     SAVE_CATEGORIES_TO_STORE,
     INIT_CATEGORIES_DATA,
     APPLY_DEMO_CATEGORIES,
+    APPLY_NEW_CATEGORIES
 } from '../actionsType/categories';
 
 import {
@@ -45,15 +46,13 @@ export default {
             const newItem = {...item};
             newItem.id = Date.now();
             const items = [...store.state.items, newItem];
-            await store.dispatch(SAVE_CATEGORIES_TO_STORE, items);
-            await store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, store.rootState.costs.items)
+            await store.dispatch(APPLY_NEW_CATEGORIES, items);
         },
         async [UPDATE_CATEGORY](store, item) {
             const items = store.state.items.map((current) => {
                 return current.id === item.id ? {...item} : {...current}
             });
-            await store.dispatch(SAVE_CATEGORIES_TO_STORE, items);
-            await store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, store.rootState.costs.items)
+            await store.dispatch(APPLY_NEW_CATEGORIES, items);
         },
         async [DELETE_CATEGORY](store, id) {
             const items = store.state.items.filter((item) => item.id !== id);
@@ -70,6 +69,10 @@ export default {
             store.commit(UPDATE_CATEGORIES, items);
             return Promise.resolve();
         }, 
+        async [APPLY_NEW_CATEGORIES](store, items) {
+            await store.dispatch(SAVE_CATEGORIES_TO_STORE, items);
+            await store.dispatch(UPDATE_COSTS_BY_CATEGORY_DATA, store.rootState.costs.items)
+        },
         [INIT_CATEGORIES_DATA](store) {
             const savedData = localStorage.getItem(DATA_TOKEN);
             const items = savedData ? JSON.parse(savedData) : DEFAULT_CATEGORIES;
