@@ -1,24 +1,25 @@
-# my-costs
+# My Costs - учёт расходов
 
-## Project setup
-```
-npm install
-```
+Позволяет отслеживать расходы по категориям на круговой диаграмме
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Демо на [GitHub Pages](https://ssupermassive.github.io/my_costs_app/)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Стэк технологий:
+* Vue 2
+* Vuex
+* BootstrapVue
+* HighchartsVue
+* SCSS
 
-### Lints and fixes files
-```
-npm run lint
-```
+## DEV - компиляция
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+* Клонировать репозиторий
+* Перейти в корень и в терминале выполнить npm start
+* По окончанию сборки перейти на http://localhost:8080/
+
+## Публикация на GitHub Pages
+* Выполнить `git checkout gh-pages`
+* Вмержить rc - ветку `git merge rc-x.x.x`
+* Выполнить `npm run build`
+* Выполнить `git add *` и `git commit -m 'gh-pages'`
+* Выполнить `git subtree push --prefix dist origin gh-pages`
