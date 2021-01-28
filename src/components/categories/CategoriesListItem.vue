@@ -217,6 +217,11 @@ export default {
   watch: {
     item(newValue) {
       this.itemData = { ...newValue };
+    },
+    editMode(newValue) {
+      if(!newValue) {
+        this.showActionsButtons = false
+      }
     }
   }
 };
